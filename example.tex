@@ -1,0 +1,42 @@
+\documentclass{standalone}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+
+\title{Image Compilation}
+\author{Hannah Boinowitz}
+\date{May 2024}
+
+\begin{document}
+
+% \maketitle
+
+% export tester.png
+\begin{tikzpicture}
+
+\draw (-2,0) -- (2,0);
+\filldraw [gray] (0,0) circle (2pt);
+\draw (-2,-2) .. controls (0,0) .. (2,-2);
+\draw (-2,2) .. controls (-1,0) and (1,0) .. (2,2);
+
+\end{tikzpicture}
+
+% export another.png
+\begin{tikzpicture}
+
+\draw (-2,0) -- (2,0);
+\filldraw [blue] (0,0) circle (8pt);
+\draw (-2,-2) .. controls (0,0) .. (2,-2);
+\draw (-2,2) .. controls (-1,0) and (1,0) .. (2,2);
+
+\end{tikzpicture}
+
+% not exported
+\begin{tikzpicture}
+
+\draw (-2,0) -- (2,0);
+\draw (-2,-2) .. controls (0,0) .. (2,-2);
+\draw (-2,2) .. controls (-1,0) and (1,0) .. (2,2);
+
+\end{tikzpicture}
+
+\end{document}
