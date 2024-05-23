@@ -9,7 +9,7 @@ import argparse
 
 # Argument Parsing
 parser = argparse.ArgumentParser(description="Export all marked TikZ to PNG")
-parser.add_argument("filename", help="Path to the LaTex file")
+parser.add_argument("filename", help="Path to the LaTex file(s)")
 parser.add_argument(
     "-d", "--directory", default=".", type=str, help="Directory where the resulting PNGs should be stored"
 )
@@ -18,12 +18,24 @@ args = parser.parse_args()
 export_folder = args.directory
 file_name = args.filename
 
+def read_single_file(file_name: str):
+    with open(file_name) as f:
+        text = f.read()
+    return text
+
+text = ""
+if os.path.isdir(file_name):
+    all_files = os.listdir(file_name)
+    for file in all_files:
+        if re.match(r"\S+\.tex", file):
+            text += read_single_file(f"{file_name}/{file}")
+else:
+    text = read_single_file(file_name)
+
+
 # Create export directory, if missing
 if not os.path.isdir(export_folder):
     os.mkdir(export_folder)
-
-with open(file_name) as f:
-    text = f.read()
 
 print("Exported Images:")
 images_to_export = re.findall(r"% export (\S+\.png)", text)
