@@ -11,17 +11,23 @@ import argparse
 parser = argparse.ArgumentParser(description="Export all marked TikZ to PNG")
 parser.add_argument("filename", help="Path to the LaTex file(s)")
 parser.add_argument(
-    "-d", "--directory", default=".", type=str, help="Directory where the resulting PNGs should be stored"
+    "-d",
+    "--directory",
+    default=".",
+    type=str,
+    help="Directory where the resulting PNGs should be stored",
 )
 
 args = parser.parse_args()
 export_folder = args.directory
 file_name = args.filename
 
+
 def read_single_file(file_name: str):
     with open(file_name) as f:
         text = f.read()
     return text
+
 
 text = ""
 if os.path.isdir(file_name):
@@ -42,20 +48,21 @@ images_to_export = re.findall(r"% export (\S+\.png)", text)
 
 for image in images_to_export:
     print(image)
-    img_primer = text.find(f'% export {image}')
-    img_start = text.find(r'\begin{tikzpicture}', img_primer)
-    img_end = text.find(r'\end{tikzpicture}', img_start)
+    img_primer = text.find(f"% export {image}")
+    img_start = text.find(r"\begin{tikzpicture}", img_primer)
+    img_end = text.find(r"\end{tikzpicture}", img_start)
 
     segment = text[img_start:img_end]
 
     with open("temp.tex", "w") as f:
         f.write(
-r"""\documentclass{standalone}
+            r"""\documentclass{standalone}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{tikz}
 
 \begin{document}
-""")
+"""
+        )
         f.write(f"{segment}\end{{tikzpicture}}\n\end{{document}}")
     latex_comp = "pdflatex -interaction nonstopmode temp.tex"
     subprocess.check_output(shlex.split(latex_comp))
